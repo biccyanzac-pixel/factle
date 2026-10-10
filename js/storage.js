@@ -2,7 +2,8 @@
 // Progress per day: { rounds: [{pick, ms, points, correct}], startedAt: {roundIndex: epochMs} }
 // Today's real game and archive replays are kept apart ('day' vs 'late').
 
-const KEY = 'factle:progress';
+// v2 (2026-10-10): day 1 was replaced by the curated version mid-day, so progress saved for the old one is ignored.
+const KEY = 'factle:progress:v2';
 
 function readAll() {
   try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; }
