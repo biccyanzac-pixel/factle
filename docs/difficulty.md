@@ -17,6 +17,6 @@ It can be measured and reproduced, and it needs no model. Its limits: it ignores
 Each round has a target difficulty. The generator picks the unused fake closest to that target (plus a little randomness).
 
 - **Within a day:** round 1 targets 0.15, then 0.32, 0.50, 0.66, and round 5 targets 0.82.
-- **Across the week:** the whole day shifts by Mon −0.12, Tue −0.06, Wed 0, Thu +0.04, Fri +0.08, Sat +0.12, Sun +0.05.
+- **Across the week:** the whole day shifts by Mon −0.12, Tue −0.06, Wed 0, Thu +0.04, Fri +0.08, Sat +0.12, Sun +0.18.
 
-So Monday is the easiest day and Saturday the hardest. Sunday sits at about Thursday's level, "a little harder" than midweek. If you meant Sunday harder than Saturday, change `WEEKDAY_SHIFT` in `pipeline/schedule.py` before regenerating future days.
+This is the jacob.gg house curve (see jacob.gg/PLAYBOOK.md): Monday is the easiest day, it rises to Saturday, and Sunday is the super-hard special. Days up to 2026-10-23 were generated with Sunday at +0.05 (about Thursday's level) and are left as they are; the +0.18 applies to days generated after that.

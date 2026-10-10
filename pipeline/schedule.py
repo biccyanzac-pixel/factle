@@ -37,7 +37,9 @@ STATS = pathlib.Path("data/schedule_stats.json")
 EPOCH = "2026-10-10"   # puzzle #1. Never change once live (renumbers every day).
 ROUNDS = 5
 ROUND_TARGET = [0.15, 0.32, 0.5, 0.66, 0.82]
-WEEKDAY_SHIFT = [-0.12, -0.06, 0.0, 0.04, 0.08, 0.12, 0.05]  # Mon..Sun
+# Mon..Sun. jacob.gg house curve: Monday easiest, rising to Saturday, Sunday the hardest of all (from days
+# generated after 2026-10-23; earlier Sundays used +0.05).
+WEEKDAY_SHIFT = [-0.12, -0.06, 0.0, 0.04, 0.08, 0.12, 0.18]
 SEED = 20261009
 
 COUNTRY_T = {"country", "sovereign state", "island country", "island nation"}

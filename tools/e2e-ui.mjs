@@ -6,6 +6,7 @@ import { chromium } from 'playwright-core';
 import { serve } from './serve.mjs';
 
 const API = process.env.API || 'http://127.0.0.1:8811';
+const HUB = process.env.HUB || 'http://127.0.0.1:8831'; // jacob.gg hub worker (ratings), run from the jacob.gg repo
 const today = new Date().toISOString().slice(0, 10);
 const day = JSON.parse(fs.readFileSync(new URL(`../site/data/days/${today}.json`, import.meta.url)));
 const srv = await serve(8081);
@@ -15,7 +16,7 @@ const check = (label, ok, detail = '') => { console.log(`${ok ? 'PASS' : 'FAIL'}
 
 const page = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
 const errors = []; page.on('pageerror', (e) => errors.push(e.message)); page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
-await page.goto(`http://localhost:8081/?api=${encodeURIComponent(API)}`);
+await page.goto(`http://localhost:8081/?api=${encodeURIComponent(API)}&hub=${encodeURIComponent(HUB)}`);
 await page.waitForSelector('#daynum:has-text("Factle #")');
 check('day number shown', (await page.textContent('#daynum')).includes(`#${day.number}`));
 await page.screenshot({ path: 'tools/results/1-intro-phone.png', fullPage: true });
@@ -45,6 +46,13 @@ await page.waitForSelector('#rows .row');
 const board = await page.$$eval('#rows .row', (rs) => rs.map((r) => r.textContent));
 check('leaderboard lists the player with 400', board.some((t) => t.includes('Tester') && t.includes('400')), JSON.stringify(board));
 await page.screenshot({ path: 'tools/results/4-done-phone.png', fullPage: true });
+check('weekday level shown (jacob.gg kit)', /·|Sunday special/.test(await page.textContent('#level')));
+await page.waitForSelector('#rate .jgg-rate');
+await page.focus('#rate .jgg-stars');
+await page.keyboard.press('End');
+await page.click('#rate .jgg-rate-send');
+await page.waitForFunction(() => document.querySelector('#rate .jgg-rate-note').textContent.startsWith('Thanks'));
+check('rating sent to the hub', true);
 
 await page.reload();
 await page.waitForSelector('#done:not([hidden])');
@@ -57,7 +65,7 @@ check('no horizontal scroll at phone width', scrollW <= 390, String(scrollW));
 
 const desk = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 desk.on('pageerror', (e) => errors.push(e.message));
-await desk.goto(`http://localhost:8081/?api=${encodeURIComponent(API)}`);
+await desk.goto(`http://localhost:8081/?api=${encodeURIComponent(API)}&hub=${encodeURIComponent(HUB)}`);
 await desk.waitForSelector('#daynum:has-text("Factle #")');
 await desk.screenshot({ path: 'tools/results/5-intro-desktop.png' });
 

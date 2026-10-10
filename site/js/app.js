@@ -54,6 +54,7 @@ function doneCount(day, late) { return store.progress(day, late).rounds.filter(B
 async function render() {
   const { day, late } = mode;
   $('daynum').textContent = `Factle #${dayNumber(day)}${late ? ` · ${day} (played later)` : ''}`;
+  if (window.JGG) $('level').replaceChildren(JGG.levelChip(day));
   show('round', false);
   const n = doneCount(day, late);
   if (n >= ROUNDS) {
@@ -206,6 +207,7 @@ function renderDone() {
       el('span', { class: 'attempt-label', text: `${roundEmoji(r.points)} Round ${i + 1}${r.correct ? ` · ${(r.ms / 1000).toFixed(1)} s` : ' · wrong pick'}` }),
       el('span', { class: `attempt-score ${r.points > 0 ? 'good' : 'bad'}`, text: String(r.points) })))));
   show('share-done', false);
+  window.JGG?.rate({ game: 'factle', day, mount: $('rate') });
 }
 
 function shareText() {
