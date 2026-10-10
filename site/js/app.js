@@ -62,6 +62,10 @@ async function render() {
   } else {
     show('done', false);
     show('intro', true);
+    const scheduled = !index || (day >= index.first && day <= index.last);
+    $('start').disabled = !scheduled;
+    hideError('start-error');
+    if (!scheduled) showError('start-error', "Today's rounds aren't ready yet. Check back soon!");
     $('start-label').textContent = n === 0 ? `Start round 1 of ${ROUNDS}` : `Continue: round ${n + 1} of ${ROUNDS}`;
     const name = api.savedName();
     $('name').value = name;

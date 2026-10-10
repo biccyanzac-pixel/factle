@@ -10,6 +10,8 @@ Stages (a hook is rejected at the first stage it fails; the reason is recorded):
                       name that is not a linked, verified-dead person; or the fact refers to an unnamed but
                       identifiable person ("the author of X", "its CEO") and isn't clearly pre-1921
   6. sensitive subject the subject article's categories match the unsuitable-topic list
+  7. people check     every person's name must itself resolve to a dead person or a non-person
+                      (pipeline.people_check; catches links like "X filmography" about living people)
 
 Outputs:
   data/facts.jsonl       the usable facts (CC BY-SA 4.0, derived from Wikipedia)
@@ -91,7 +93,7 @@ def unlinked_people(doc, links, ents):
     names = [e.text for e in doc.ents if e.label_ == "PERSON"] + [m.group(1) for m in ROLE_NAME_RE.finditer(doc.text)]
     for name in names:
         t = tokens(name)
-        if not t or not any(t & s for s in safe):
+        if not t or not any(t <= s for s in safe):  # all words of the name, not just a shared surname
             missing.append(name)
     return missing
 
@@ -191,6 +193,10 @@ def main():
     with OUT_REJECTED.open("w", encoding="utf-8", newline="\n") as fh:
         for r in rejected:
             fh.write(json.dumps(r, ensure_ascii=False) + "\n")
+    # second pass: every person's name must itself resolve to a dead person or a non-person (pipeline.people_check)
+    from pipeline import people_check
+    people_check.main()
+    facts = [json.loads(l) for l in OUT_FACTS.open(encoding="utf-8")]
     summary = {"hooks": len(hooks), "facts": len(facts), "rejected": len(rejected),
                "by_reason": dict(sorted(stats.items()))}
     OUT_STATS.write_text(json.dumps(summary, indent=2), encoding="utf-8")

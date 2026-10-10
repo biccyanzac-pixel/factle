@@ -55,3 +55,18 @@ def test_known_living_names_absent(facts):
     text = "\n".join(f["statement"] for f in facts)
     for name in ("Zayn Malik", "Sunjeev Sahota", "Coen brothers", "Rolling Stones"):
         assert name not in text
+
+
+def test_articles_about_living_people_caught(facts):
+    # found 2026-10-10: links to "X filmography" / "List of X performances" / "X as a gay icon" got through
+    text = "\n".join(f["statement"] for f in facts)
+    for name in ("Charlize Theron", "Amy Adams", "Meryl Streep", "Ranbir Kapoor", "Miley Cyrus", "Mitt Romney"):
+        assert name not in text, name
+
+
+def test_derived_link_titles():
+    from pipeline.people_check import DERIVED_RE
+    for title, person in [("Charlize Theron filmography", "Charlize Theron"), ("List of Amy Adams performances", "Amy Adams"),
+                          ("Meryl Streep on screen and stage", "Meryl Streep"), ("Dolly Parton as a gay icon", "Dolly Parton")]:
+        m = DERIVED_RE.match(title)
+        assert m and (m.group("a") or m.group("b")) == person

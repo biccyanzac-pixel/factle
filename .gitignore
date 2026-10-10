@@ -13,3 +13,5 @@ data/hooks.jsonl
 data/rejected.jsonl
 worker/node_modules/
 tools/results/
+data/facts.before-*.jsonl
+data/rejected_people.jsonl

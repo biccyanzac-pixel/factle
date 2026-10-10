@@ -1,0 +1,9 @@
+{
+  "fakes_written": 79,
+  "rejected_true_elsewhere": 3,
+  "rejected_contradiction": 5,
+  "fakes_passed": 71,
+  "days_built": 14,
+  "true_facts_left": 36,
+  "fakes_left": 1
+}
