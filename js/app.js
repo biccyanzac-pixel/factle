@@ -71,8 +71,8 @@ async function render() {
     const name = api.savedName();
     $('name').value = name;
     show('name-field', !name);
-    $('playing-as').textContent = name ? `Playing as ${name}.` : '';
-    show('playing-as', !!name);
+    if (window.JGG) JGG.playingAs({ mount: $('playing-as'), name, onChange: (n) => { api.saveName(n); $('name').value = n; } });
+    else { $('playing-as').textContent = name ? `Playing as ${name}.` : ''; show('playing-as', !!name); }
   }
   renderBoard();
 }
