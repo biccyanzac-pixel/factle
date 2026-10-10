@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Factle credits</title>
+    <meta name="color-scheme" content="dark light" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="masthead"><a class="wordmark" href="./">Factle <span>· back to the game</span></a></header>
+      <section class="card">
+        <h1 class="prompt">Credits and licences</h1>
+        <p class="riddle-note">
+          Every fact in Factle comes from English Wikipedia's
+          <a href="https://en.wikipedia.org/wiki/Wikipedia:Did_you_know">"Did you know…?"</a> section and the articles
+          it links to, written by Wikipedia's volunteer contributors. Each fact links to its source articles in the
+          game, and their edit histories list the authors.
+        </p>
+        <p class="riddle-note">
+          Wikipedia text is licensed under
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Factle's facts were reworded
+          from DYK hooks and filtered by automated rules, and the fakes are deliberately false versions of real facts.
+          The derived fact dataset (<code>data/facts.jsonl</code> and <code>site/data/days/</code> in the
+          <a href="https://github.com/biccyanzac-pixel/factle">repository</a>) is also CC BY-SA 4.0.
+        </p>
+        <p class="riddle-note">
+          Linked articles were classified using <a href="https://www.wikidata.org/">Wikidata</a> (CC0). Facts about
+          living people are excluded, so no fake makes a false claim about a living person.
+        </p>
+        <p class="riddle-note">
+          Fakes are checked automatically with the
+          <a href="https://huggingface.co/cross-encoder/nli-MiniLM2-L6-H768">cross-encoder/nli-MiniLM2-L6-H768</a>
+          model (Apache-2.0) and a Wikipedia search. If a fake turns out to be true, use the 🚩 button after the round.
+        </p>
+        <p class="riddle-note">Factle is not affiliated with Wikipedia or the Wikimedia Foundation.</p>
+      </section>
+    </main>
+  </body>
+</html>

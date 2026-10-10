@@ -1,0 +1,27 @@
+{
+  "hooks": 121239,
+  "facts": 38019,
+  "rejected": 83220,
+  "by_reason": {
+    "1_parse:ends_in_quoted_question": 71,
+    "1_parse:leftover_markup": 53,
+    "1_parse:multiple_questions": 96,
+    "1_parse:no_question_mark": 34,
+    "1_parse:no_that": 134,
+    "1_parse:template": 146,
+    "2_text:fast_changing": 23006,
+    "2_text:needs_context": 2771,
+    "2_text:too_long": 6296,
+    "2_text:too_short": 188,
+    "2_text:unsuitable_topic": 23677,
+    "3_subject:no_subject_link": 371,
+    "3_subject:subject_unverifiable": 485,
+    "4_living:ambiguous_link": 3002,
+    "4_living:group_with_living_members": 2021,
+    "4_living:living_person": 11596,
+    "4_living:recently_dead_person": 515,
+    "5_ner:unlinked_person": 1583,
+    "5_ner:unnamed_identifiable_person": 1627,
+    "6_category:sensitive_subject_category": 5548
+  }
+}

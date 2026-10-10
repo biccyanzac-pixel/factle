@@ -1,0 +1,13 @@
+{
+  "facts_with_a_mutation": 16850,
+  "candidates": 16850,
+  "candidates_count": 3682,
+  "candidates_year": 7669,
+  "candidates_nation": 1990,
+  "candidates_word": 2082,
+  "candidates_place": 1427,
+  "rejected_contradiction": 977,
+  "rejected_true_elsewhere": 226,
+  "days_built": 366,
+  "fakes_used": 1830
+}

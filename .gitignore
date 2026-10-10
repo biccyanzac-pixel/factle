@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+.pytest_cache/
+# raw Wikipedia downloads and API caches (re-fetchable)
+data/raw/
+data/cache/
+.env
+node_modules/
+.wrangler/
+data/*.log
+# large, regenerable from data/raw (python -m pipeline.parse_hooks / ingest)
+data/hooks.jsonl
+data/rejected.jsonl
+worker/node_modules/
+tools/results/

@@ -1,0 +1,12 @@
+name = "factle-leaderboard"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "factle-leaderboard"
+database_id = "f7c5659f-cddb-4dd4-b445-25f265d42957"
+
+# Browser origins allowed to call this API (comma-separated).
+[vars]
+ALLOWED_ORIGINS = "https://biccyanzac-pixel.github.io"
