@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Factle</title>
+    <meta name="description" content="Five rounds a day: four true facts from Wikipedia and one fake. Spot the fake, fast." />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%A7%90%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="masthead">
+        <a class="wordmark" href="/jacob.gg/">jacob<span>.gg</span></a>
+      </header>
+
+      <section class="card" id="card">
+        <div class="card-top">
+          <span class="eyebrow" id="daynum">Factle</span>
+          <span class="eyebrow countdown" id="countdown"></span>
+        </div>
+
+        <!-- Intro: shown until the first round starts -->
+        <div id="intro">
+          <p class="eyebrow challenge-label">Today's game</p>
+          <h1 class="prompt">Spot the fake fact</h1>
+          <p class="riddle-note">
+            5 rounds. Each round shows 5 surprising facts from Wikipedia: 4 are true, and 1 is a fake made by
+            changing one detail of a real fact.
+          </p>
+          <p class="attempts-note">Up to 100 points a round for speed. Pick the wrong one and you score 0.</p>
+
+          <form class="play" id="start-form">
+            <label class="field" id="name-field">
+              <span class="label">Your name</span>
+              <input id="name" type="text" maxlength="20" autocomplete="nickname" placeholder="e.g. jacob" required />
+            </label>
+            <p class="playing-as" id="playing-as" hidden></p>
+            <p class="error" id="start-error" role="alert" hidden></p>
+            <button class="submit" id="start" type="submit">
+              <span class="submit-label" id="start-label">Start round 1 of 5</span>
+              <span class="spinner" aria-hidden="true"></span>
+            </button>
+            <p class="fineprint">The clock starts when the facts appear. Full points within 15 seconds.</p>
+          </form>
+        </div>
+
+        <!-- A round -->
+        <div id="round" hidden>
+          <div class="round-head">
+            <p class="eyebrow challenge-label" id="round-label">Round 1 of 5</p>
+            <p class="timer" id="timer" aria-live="off"><span id="timer-points">100</span> pts</p>
+          </div>
+          <h2 class="round-question" id="round-question">Which one is fake?</h2>
+          <ol class="facts" id="facts"></ol>
+          <p class="error" id="round-error" role="alert" hidden></p>
+          <button class="submit" id="confirm" type="button" disabled>
+            <span class="submit-label" id="confirm-label">Tap the fact you think is fake</span>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
+
+          <div class="reveal" id="reveal" hidden>
+            <div class="reveal-score">
+              <p class="eyebrow">This round</p>
+              <p class="score" id="round-score">0</p>
+            </div>
+            <div class="original" id="original"></div>
+            <div class="reveal-actions">
+              <a class="report" id="report" target="_blank" rel="noopener">🚩 This fake is actually true!</a>
+              <button class="submit" id="next" type="button">Next round →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Finished -->
+        <div class="attempts" id="done" hidden>
+          <p class="eyebrow" id="daily-score-caption">Today's score</p>
+          <p class="score" id="daily-score">0</p>
+          <p class="out-of">out of 500</p>
+          <ol class="attempt-list" id="round-list"></ol>
+          <button class="submit share" id="share" type="button">Share result</button>
+          <p class="fineprint" id="share-done" hidden>Copied to clipboard.</p>
+          <p class="attempts-done">Come back tomorrow for five new rounds.</p>
+        </div>
+      </section>
+
+      <section class="card board" id="board" hidden>
+        <div class="card-top">
+          <h2 class="eyebrow">Today's leaderboard</h2>
+          <span class="eyebrow" id="players"></span>
+        </div>
+        <ol class="rows" id="rows"></ol>
+        <p class="board-empty" id="board-empty" hidden>Nobody has played yet today. Be the first.</p>
+        <p class="board-note" id="board-note" hidden></p>
+      </section>
+
+      <section class="card archive" id="archive">
+        <div class="card-top">
+          <h2 class="eyebrow">Archive: replay a past day</h2>
+        </div>
+        <p class="archive-note">
+          Replays go on a separate "played later" board and never change a day's original results.
+        </p>
+        <div class="archive-picker">
+          <button type="button" class="archive-browse" id="archive-browse">Browse archive</button>
+        </div>
+        <ul class="archive-list" id="archive-list" hidden></ul>
+      </section>
+
+      <footer class="footer">
+        <p>New rounds every day at midnight UTC. Ties go to whoever finished first.</p>
+        <p>Facts from Wikipedia's <a href="https://en.wikipedia.org/wiki/Wikipedia:Did_you_know">Did you know…?</a>,
+          CC BY-SA 4.0. <a href="credits.html">Credits</a></p>
+      </footer>
+    </main>
+
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>
