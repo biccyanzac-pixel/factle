@@ -869,6 +869,7 @@ a { color: var(--accent); }
   font: inherit;
   font-size: 1rem;
   line-height: 1.45;
+  overflow-wrap: anywhere; /* long unbroken names (43 letters on 2026-10-19) scrolled the page sideways on phones */
   color: var(--text);
   background: var(--surface-2);
   border: 1px solid var(--border);
