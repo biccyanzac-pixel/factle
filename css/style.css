@@ -1,6 +1,11 @@
 /* The house base (colours, font, page, masthead) comes from the jacob.gg kit, loaded first:
    https://biccyanzac-pixel.github.io/jacob.gg/kit/jgg.css. This file only adds the game's own components. */
 
+/* No grey tap flash on phones: every control below has its own :active feedback instead. */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* --- cards --- */
 
 .card {
@@ -92,6 +97,7 @@ textarea {
   border: 1px solid var(--border);
   border-radius: 10px;
   resize: vertical;
+  font-size: max(16px, 1em); /* 16px or more, so iOS doesn't zoom into the field */
 }
 
 input[type="text"]:focus-visible,
@@ -122,11 +128,19 @@ textarea:focus-visible,
   border: 0;
   border-radius: 10px;
   cursor: pointer;
-  transition: filter 0.15s ease, opacity 0.15s ease;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: filter 0.15s ease, opacity 0.15s ease, transform var(--jgg-t-press, 120ms) var(--jgg-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
 }
 
-.submit:hover:not(:disabled) {
-  filter: brightness(1.08);
+@media (hover: hover) and (pointer: fine) {
+  .submit:hover:not(:disabled) {
+    filter: brightness(1.08);
+  }
+}
+
+.submit:active:not(:disabled) {
+  transform: scale(0.97);
 }
 
 .submit:disabled {
@@ -657,6 +671,13 @@ textarea:focus-visible,
   font: inherit;
   font-weight: 600;
   cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: transform var(--jgg-t-press, 120ms) var(--jgg-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+}
+
+.archive-browse:active:not(:disabled) {
+  transform: scale(0.97);
 }
 
 .archive-list {
@@ -668,6 +689,7 @@ textarea:focus-visible,
   gap: 0.5rem;
   max-height: 16rem;
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .archive-list-item {
@@ -683,10 +705,18 @@ textarea:focus-visible,
   padding: 0.6rem 0.8rem;
   font: inherit;
   cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
-.archive-list-item:hover {
-  border-color: var(--accent);
+@media (hover: hover) and (pointer: fine) {
+  .archive-list-item:hover {
+    border-color: var(--accent);
+  }
+}
+
+.archive-list-item:active {
+  background: var(--surface-2);
 }
 
 .archive-list-day {
@@ -783,9 +813,11 @@ textarea:focus-visible,
   cursor: pointer;
 }
 
-.feedback-toggle:hover {
-  color: var(--text);
-  border-color: var(--accent);
+@media (hover: hover) and (pointer: fine) {
+  .feedback-toggle:hover {
+    color: var(--text);
+    border-color: var(--accent);
+  }
 }
 
 .feedback-form {
@@ -843,11 +875,21 @@ a { color: var(--accent); }
   border-radius: 12px;
   padding: 0.8rem 0.95rem;
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, transform var(--jgg-t-press, 120ms) var(--jgg-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
   -webkit-tap-highlight-color: transparent;
 }
 
-.fact:hover:not(:disabled) { border-color: var(--accent); }
+/* While the round is open the facts are choices: no long-press text selection. Once revealed they're text to read. */
+.fact:not(:disabled) {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fact:hover:not(:disabled) { border-color: var(--accent); }
+}
+
+.fact:active:not(:disabled) { transform: scale(0.97); }
 
 .fact:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
@@ -897,7 +939,9 @@ a { color: var(--accent); }
 }
 
 .fact-sources a { color: var(--muted); }
-.fact-sources a:hover { color: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .fact-sources a:hover { color: var(--accent); }
+}
 
 .reveal { margin-top: 0.5rem; animation: rise 0.35s ease both; }
 
@@ -941,9 +985,27 @@ a { color: var(--accent); }
   border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 0.4rem 0.75rem;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: transform var(--jgg-t-press, 120ms) var(--jgg-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
 }
 
-.report:hover { color: var(--text); border-color: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .report:hover { color: var(--text); border-color: var(--accent); }
+}
+
+.report:active { transform: scale(0.97); }
+
+/* Reduced motion: press feedback without movement. */
+@media (prefers-reduced-motion: reduce) {
+  .submit:active:not(:disabled),
+  .archive-browse:active:not(:disabled),
+  .fact:active:not(:disabled),
+  .report:active {
+    transform: none;
+    opacity: 0.85;
+  }
+}
 
 .out-of { margin: 0.2rem 0 0; color: var(--muted); font-size: 0.9rem; }
 
