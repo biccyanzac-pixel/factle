@@ -191,6 +191,9 @@ textarea:focus-visible,
   letter-spacing: -0.045em;
   font-variant-numeric: tabular-nums;
   color: var(--accent);
+  /* The score counts up once a frame: keep that relayout inside this box (one line, line-height 1 = 1em tall). */
+  height: 1em;
+  contain: size layout;
 }
 
 .score.good {
@@ -808,7 +811,7 @@ a { color: var(--accent); }
   padding: 0.8rem 0.95rem;
   cursor: pointer;
   transition: border-color var(--jgg-t-hover, 150ms) ease, background-color var(--jgg-t-hover, 150ms) ease,
-    opacity var(--jgg-t-hover, 150ms) ease, transform 80ms var(--jgg-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+    transform 80ms var(--jgg-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -822,7 +825,7 @@ a { color: var(--accent); }
   .fact:hover:not(:disabled) { border-color: var(--accent); }
 }
 
-.fact:active:not(:disabled) { transform: scale(0.97); transition-duration: var(--jgg-t-hover, 150ms), var(--jgg-t-hover, 150ms), var(--jgg-t-hover, 150ms), var(--jgg-t-press, 120ms); }
+.fact:active:not(:disabled) { transform: scale(0.97); transition-duration: var(--jgg-t-hover, 150ms), var(--jgg-t-hover, 150ms), var(--jgg-t-press, 120ms); }
 
 .fact:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
@@ -885,17 +888,15 @@ a { color: var(--accent); }
 @keyframes f-reveal { from { opacity: 0; transform: translateY(10px) scale(0.96); } }
 @keyframes f-fade { from { opacity: 0; } }
 
-/* The round's result panel, the tags and sources on each fact card (staggered by --jgg-i, set per card), and the
+/* The round's result panel, the True/Fake tags on each fact card (staggered by --jgg-i, set per card), and the
    done screen's round rows (only right after round 5: .is-new). */
 .reveal,
 .fact-tag,
-.fact .fact-sources,
 .attempt-row.is-new {
   animation: f-reveal var(--jgg-t-reveal, 320ms) var(--jgg-ease-out, cubic-bezier(0.23, 1, 0.32, 1)) backwards;
 }
 
 .fact-tag,
-.fact .fact-sources,
 .attempt-row.is-new {
   animation-delay: calc(min(var(--jgg-i, 0), 6) * var(--jgg-stagger, 50ms)); /* capped at the 7th, like the kit */
 }
@@ -913,7 +914,6 @@ a { color: var(--accent); }
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .fact-tag,
-  .fact .fact-sources,
   .attempt-row.is-new,
   .facts > li,
   .archive-list {

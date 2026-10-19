@@ -162,7 +162,7 @@ function revealRound(round, pick, points) {
   const items = [...$('facts').querySelectorAll('.fact')];
   items.forEach((b, k) => {
     b.disabled = true;
-    b.style.setProperty('--jgg-i', k); // the tags and sources reveal one card after another
+    b.style.setProperty('--jgg-i', k); // the tags reveal one card after another
     const isFake = k === round.fake;
     b.classList.add(isFake ? 'is-fake' : 'is-true');
     if (isFake && k === pick) b.classList.add('picked-right');
