@@ -650,7 +650,7 @@ textarea:focus-visible,
 }
 
 .archive-list-item:active {
-  background: var(--surface-2);
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface-2)); /* the row's own background is --surface-2 */
 }
 
 .archive-list-day {
@@ -901,10 +901,7 @@ a { color: var(--accent); }
   animation-delay: calc(min(var(--jgg-i, 0), 6) * var(--jgg-stagger, 50ms)); /* capped at the 7th, like the kit */
 }
 
-/* New facts fade in (no movement, no delay): the round's clock is already running, so they're readable at once. */
-.facts > li {
-  animation: f-fade var(--jgg-t-enter, 220ms) var(--jgg-ease-out, cubic-bezier(0.23, 1, 0.32, 1)) backwards;
-}
+/* New facts are not animated: they are the timed puzzle, and the round's clock is already running. */
 
 /* The archive list comes in once each time it's opened. */
 .archive-list {
@@ -915,7 +912,6 @@ a { color: var(--accent); }
   .reveal,
   .fact-tag,
   .attempt-row.is-new,
-  .facts > li,
   .archive-list {
     animation: f-fade var(--jgg-t-exit, 160ms) ease backwards;
   }

@@ -91,7 +91,9 @@ async function startRound(i) {
   const round = data.rounds[i];
   const from = ['intro', 'done'].map($).find((e) => !e.hidden);
   show('reveal', false);
-  from ? phase(from, $('round')) : show('round', true);
+  // The round is the timed puzzle: it appears at once, never faded in, so the clock and the facts start together.
+  if (from) show(from.id, false);
+  show('round', true);
   hideError('round-error');
   $('round-label').textContent = `Round ${i + 1} of ${ROUNDS}`;
   $('round-question').textContent = 'Which one is fake?';
@@ -175,7 +177,7 @@ function revealRound(round, pick, points) {
   $('confirm').hidden = true;
   $('round-question').textContent = pick === round.fake ? 'Correct!' : 'Not quite.';
   const sc = $('round-score');
-  countUp(sc, points);
+  sc.textContent = points; // no count-up: the live timer has just shown this number
   sc.className = `score ${points > 0 ? 'good' : 'bad'}`;
 
   // the original sentence with the changed detail marked
