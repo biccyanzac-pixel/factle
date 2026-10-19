@@ -22,6 +22,7 @@ html {
 
 .card-top {
   display: flex;
+  flex-wrap: wrap; /* "Factle #12 · 2026-10-12 (played later)" and the countdown share 320 px */
   align-items: baseline;
   justify-content: space-between;
   gap: 1rem;
@@ -179,6 +180,7 @@ textarea:focus-visible,
   background: color-mix(in srgb, var(--bad) 12%, transparent);
   border: 1px solid color-mix(in srgb, var(--bad) 35%, transparent);
   border-radius: 10px;
+  overflow-wrap: anywhere; /* server messages can carry long URLs */
 }
 
 .score {
@@ -224,7 +226,7 @@ textarea:focus-visible,
 
 .row {
   display: grid;
-  grid-template-columns: 1.75rem minmax(0, 1fr) auto;
+  grid-template-columns: minmax(1.75rem, max-content) minmax(0, 1fr) auto; /* ranks of 1000+ */
   align-items: center;
   gap: 0.75rem;
   padding: 0.6rem 0.65rem;
@@ -321,6 +323,7 @@ textarea:focus-visible,
 
 .board-empty {
   margin: 0;
+  overflow-wrap: anywhere;
   color: var(--muted);
   font-size: 0.92rem;
 }
@@ -359,6 +362,7 @@ textarea:focus-visible,
 
 .board-note {
   margin: 0.9rem 0 0;
+  overflow-wrap: anywhere;
   font-size: 0.82rem;
   color: var(--muted);
 }
@@ -395,6 +399,7 @@ textarea:focus-visible,
 
 .playing-as {
   margin: 0;
+  overflow-wrap: anywhere; /* names shared from other games aren't cut to 20 */
   font-size: 0.82rem;
   color: var(--muted);
 }
@@ -588,7 +593,7 @@ textarea:focus-visible,
 
 .archive-browse {
   background: var(--accent);
-  color: var(--accent-contrast, #111);
+  color: #fff; /* same as .submit: #111 on the accent was hard to read in light mode */
   border: none;
   border-radius: 0.5rem;
   padding: 0.5rem 1rem;
@@ -623,7 +628,8 @@ textarea:focus-visible,
   flex-direction: column;
   gap: 0.15rem;
   text-align: left;
-  background: var(--panel);
+  overflow-wrap: anywhere;
+  background: var(--surface-2);
   color: var(--text);
   border: 1px solid var(--border);
   border-radius: 0.5rem;
@@ -919,6 +925,7 @@ a { color: var(--accent); }
 
 .original {
   padding: 0.75rem 1rem;
+  overflow-wrap: anywhere; /* the real fact can hold the same long names as the facts */
   font-size: 0.98rem;
   background: var(--surface-2);
   border-left: 3px solid var(--good);
@@ -989,6 +996,5 @@ a { color: var(--accent); }
 
 .footer a { color: var(--muted); }
 
-.archive-list-item { background: var(--surface-2); }
 
 #confirm, #next { width: 100%; }
