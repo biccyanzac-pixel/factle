@@ -199,6 +199,8 @@ function revealRound(round, pick, points) {
 }
 
 function nextRound() {
+  // A second tap while moving on (current is cleared until the next round starts) does nothing.
+  if (!current) return;
   const i = current.roundIndex + 1;
   current = null;
   if (i < ROUNDS) startRound(i);
