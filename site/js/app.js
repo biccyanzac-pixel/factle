@@ -24,7 +24,13 @@ function el(tag, props = {}, ...children) {
   return n;
 }
 
-const show = (id, on = true) => { $(id).hidden = !on; };
+// A plain show/hide cancels any transition still running on that element, so it can't undo this later.
+const show = (id, on = true) => { const e = $(id); e.getAnimations?.().forEach((a) => a.cancel()); e.hidden = !on; };
+// The kit's motion (docs/motion-system.md) when it loaded; the same end state without it.
+const motion = () => window.JGG?.motion;
+const phase = (from, to) => { const m = motion(); if (m && !from.hidden) m.swap(from, to); else { from.hidden = true; to.hidden = false; } };
+const scrollTo = (e, block = 'start') => { const m = motion(); m ? m.scroll(e, { block }) : e.scrollIntoView({ block }); };
+const countUp = (e, to) => { e.textContent = to; motion()?.settle(e, to); };
 
 async function loadDay(day) {
   if (!dayCache.has(day)) {
@@ -83,7 +89,11 @@ async function startRound(i) {
   try { data = await loadDay(day); }
   catch (e) { showError('start-error', e.message); return; }
   const round = data.rounds[i];
-  show('intro', false); show('done', false); show('reveal', false); show('round', true);
+  const from = ['intro', 'done'].map($).find((e) => !e.hidden);
+  show('reveal', false);
+  // The round is the timed puzzle: it appears at once, never faded in, so the clock and the facts start together.
+  if (from) show(from.id, false);
+  show('round', true);
   hideError('round-error');
   $('round-label').textContent = `Round ${i + 1} of ${ROUNDS}`;
   $('round-question').textContent = 'Which one is fake?';
@@ -102,7 +112,7 @@ async function startRound(i) {
   current = { roundIndex: i, data, start, pick: null, timer: setInterval(tickTimer, 250) };
   tickTimer();
   list.querySelector('button')?.focus({ preventScroll: true });
-  $('card').scrollIntoView({ block: 'start', behavior: 'smooth' });
+  scrollTo($('card'));
 }
 
 function tickTimer() {
@@ -154,6 +164,7 @@ function revealRound(round, pick, points) {
   const items = [...$('facts').querySelectorAll('.fact')];
   items.forEach((b, k) => {
     b.disabled = true;
+    b.style.setProperty('--jgg-i', k); // the tags reveal one card after another
     const isFake = k === round.fake;
     b.classList.add(isFake ? 'is-fake' : 'is-true');
     if (isFake && k === pick) b.classList.add('picked-right');
@@ -166,7 +177,7 @@ function revealRound(round, pick, points) {
   $('confirm').hidden = true;
   $('round-question').textContent = pick === round.fake ? 'Correct!' : 'Not quite.';
   const sc = $('round-score');
-  sc.textContent = points;
+  sc.textContent = points; // no count-up: the live timer has just shown this number
   sc.className = `score ${points > 0 ? 'good' : 'bad'}`;
 
   // the original sentence with the changed detail marked
@@ -184,25 +195,26 @@ function revealRound(round, pick, points) {
   $('report').href = `${REPO}/issues/new?labels=reported-fake&title=${encodeURIComponent(`Fake is actually true: ${mode.day} round ${current.roundIndex + 1}`)}&body=${encodeURIComponent(body)}`;
   $('next').textContent = current.roundIndex + 1 < ROUNDS ? 'Next round →' : 'See your score →';
   show('reveal', true);
-  $('reveal').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  scrollTo($('reveal'), 'nearest');
 }
 
 function nextRound() {
   const i = current.roundIndex + 1;
   current = null;
   if (i < ROUNDS) startRound(i);
-  else { show('round', false); renderDone(); renderBoard(); $('card').scrollIntoView({ block: 'start', behavior: 'smooth' }); }
+  else { renderDone(true); renderBoard(); scrollTo($('card')); }
 }
 
-function renderDone() {
+// fresh: just finished round 5, so the score counts up and the rows come in. Never on a reload or re-render.
+function renderDone(fresh) {
   const { day, late } = mode;
   const rounds = store.progress(day, late).rounds;
   const total = rounds.reduce((a, r) => a + (r?.points || 0), 0);
-  show('done', true);
+  fresh ? phase($('round'), $('done')) : show('done', true);
   $('daily-score-caption').textContent = late ? `Your replay of ${day}` : "Today's score";
-  $('daily-score').textContent = total;
+  if (fresh) countUp($('daily-score'), total); else $('daily-score').textContent = total;
   const list = $('round-list');
-  list.replaceChildren(...rounds.map((r, i) => el('li', { class: 'attempt-row' },
+  list.replaceChildren(...rounds.map((r, i) => el('li', { class: `attempt-row${fresh ? ' is-new' : ''}`, style: `--jgg-i: ${i}` },
     el('div', { class: 'attempt-head' },
       el('span', { class: 'attempt-label', text: `${roundEmoji(r.points)} Round ${i + 1}${r.correct ? ` · ${(r.ms / 1000).toFixed(1)} s` : ' · wrong pick'}` }),
       el('span', { class: `attempt-score ${r.points > 0 ? 'good' : 'bad'}`, text: String(r.points) })))));
@@ -248,11 +260,11 @@ async function renderBoard() {
     : el('li', { class: `row${r.you ? ' me' : ''}` },
       el('span', { class: 'row-rank', text: `${r.rank}` }),
       el('div', { class: 'row-main' },
-        el('div', { class: 'row-name', text: r.name }),
+        el('div', { class: 'row-name', text: r.name, title: r.name ?? '', dir: 'auto' }),
         el('div', { class: 'row-sub' },
-          el('span', { class: 'row-emoji', text: r.rounds.map(roundEmoji).join('') }),
+          el('span', { class: 'row-emoji', text: (r.rounds || []).map(roundEmoji).join('') }),
           r.played < ROUNDS ? ` · ${r.played}/${ROUNDS} rounds` : '')),
-      el('span', { class: 'row-score', text: String(r.total) }))));
+      el('span', { class: 'row-score', text: String(r.total ?? '') }))));
   show('board-empty', !b.top.length);
 }
 
@@ -286,7 +298,7 @@ function openArchive(d) {
   mode = doneCount(d, false) >= ROUNDS ? { day: d, late: false } : { day: d, late: true };
   $('archive-list').hidden = true;
   render();
-  $('card').scrollIntoView({ block: 'start', behavior: 'smooth' });
+  scrollTo($('card'));
 }
 
 // --- errors ---------------------------------------------------------------------------------------
